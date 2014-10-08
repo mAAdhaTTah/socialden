@@ -1,0 +1,20 @@
+{
+  "name": "wp-plugin-boilerplate",
+  "version": "1.0.0",
+  "homepage": "http://www.yoursite.com/",
+  "authors": [
+    "mAAdhaTTah <jamesorodig@gmail.com>",
+    "Aram Zucker-Scharff"
+  ],
+  "description": "SocialDen is a WordPress framework plugin that aims to be your new social home, one that gives you full control over your data, your privacy, and your face to the world while providing interoperability with your current social networks in a native, extensible way.",
+  "license": "GPL-2.0+",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "lib/js",
+    "test",
+    "tests"
+  ]
+}
