@@ -39,13 +39,17 @@ define( 'SOCIALDEN_DIR', plugin_dir_path( __FILE__ ) );
 // URL i.e. http://www.yoursite.com/wp-content/plugins/wp-gistpen/
 define( 'SOCIALDEN_URL', plugin_dir_url( __FILE__ ) );
 
-/**
- * Include the autoloader
- */
-require_once 'lib/php/autoload.php';
-
+/*----------------------------------------------------------------------------*
+ * Register activation & deactivation hooks
+ *----------------------------------------------------------------------------*/
 register_activation_hook( __FILE__, array( 'SocialDen\Activator', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'SocialDen\Deactivator', 'deactivate' ) );
+
+/*----------------------------------------------------------------------------*
+ * Register autoloader
+ *----------------------------------------------------------------------------*/
+
+spl_autoload_register('SocialDen::register');
 
 /**
  * Singleton container class
@@ -62,6 +66,35 @@ class SocialDen {
 		}
 
 		return $app;
+	}
+	
+	public static function register( $class ) {
+
+	    // project-specific namespace prefix
+	    $prefix = 'SocialDen\\';
+	
+	    // base directory for the namespace prefix
+	    $base_dir = __DIR__ . '/app/';
+	
+	    // does the class use the namespace prefix?
+	    $len = strlen( $prefix );
+	    if ( strncmp( $prefix, $class, $len ) !== 0) {
+	        // no, move to the next registered autoloader
+	        return;
+	    }
+	
+	    // get the relative class name
+	    $relative_class = substr( $class, $len );
+	
+	    // replace the namespace prefix with the base directory, replace namespace
+	    // separators with directory separators in the relative class name, append
+	    // with .php
+	    $file = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
+	
+	    // if the file exists, require it
+	    if ( file_exists( $file ) ) {
+	        require $file;
+	    }
 	}
 }
 
