@@ -30,6 +30,12 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+// If we don't have the right PHP version, abort.
+if ( version_compare( PHP_VERSION, '5.3.0', '<' ) ) {
+	deactivate_plugins( basename( __FILE__ ) );
+	wp_die('<p><strong>SocialDen</strong> requires PHP  version 5.3 or greater.</p>', 'Plugin Activation Error',  array( 'response'=>200 ) );
+}
+
 /*----------------------------------------------------------------------------*
  * Define Constants
  *----------------------------------------------------------------------------*/
@@ -70,31 +76,31 @@ class SocialDen {
 	
 	public static function register( $class ) {
 
-	    // project-specific namespace prefix
-	    $prefix = 'SocialDen\\';
+		// project-specific namespace prefix
+		$prefix = 'SocialDen\\';
 	
-	    // base directory for the namespace prefix
-	    $base_dir = __DIR__ . '/app/';
+		// base directory for the namespace prefix
+		$base_dir = __DIR__ . '/app/';
 	
-	    // does the class use the namespace prefix?
-	    $len = strlen( $prefix );
-	    if ( strncmp( $prefix, $class, $len ) !== 0) {
-	        // no, move to the next registered autoloader
-	        return;
-	    }
+		// does the class use the namespace prefix?
+		$len = strlen( $prefix );
+		if ( strncmp( $prefix, $class, $len ) !== 0) {
+			// no, move to the next registered autoloader
+			return;
+		}
 	
-	    // get the relative class name
-	    $relative_class = substr( $class, $len );
+		// get the relative class name
+		$relative_class = substr( $class, $len );
 	
-	    // replace the namespace prefix with the base directory, replace namespace
-	    // separators with directory separators in the relative class name, append
-	    // with .php
-	    $file = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
+		// replace the namespace prefix with the base directory, replace namespace
+		// separators with directory separators in the relative class name, append
+		// with .php
+		$file = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
 	
-	    // if the file exists, require it
-	    if ( file_exists( $file ) ) {
-	        require $file;
-	    }
+		// if the file exists, require it
+		if ( file_exists( $file ) ) {
+			require $file;
+		}
 	}
 }
 
